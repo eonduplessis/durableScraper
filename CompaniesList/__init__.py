@@ -10,4 +10,9 @@ import logging
 
 #Return companies list
 def main(name: str) -> list:
-    return ['01888425', '03633621', '09446231']
+    companies_list = []
+
+    with open('CompaniesList\companies_list.txt') as f:
+        companies_list = f.read().splitlines()
+    
+    return companies_list #['01888425', '03633621', '09446231', '00041424', '02723534', '03196209','00617987', '03888792', '00023307', '03407696', '00102498']

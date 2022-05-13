@@ -17,9 +17,14 @@ import azure.durable_functions as df
 def orchestrator_function(context: df.DurableOrchestrationContext):
     work_batch = yield context.call_activity('CompaniesList', None)
 
-    parallel_tasks = [ context.call_activity('ScrapeCompanyFiles', b) for b in work_batch ]
+    get_file_url_parallel_tasks = [ context.call_activity('ScrapeCompanyFilesURLs', b) for b in work_batch ]
     
-    outputs = yield context.task_all(parallel_tasks)
+    file_urls = yield context.task_all(get_file_url_parallel_tasks)
+
+    download_files_parallel_tasks = [ context.call_activity('DownloadCompanyFileFromURL', fu) for fu in file_urls ]
+
+    output = yield context.task_all(download_files_parallel_tasks)
+
 
     #result3 = yield context.call_activity('CompaniesList', "London")
 
